@@ -8,12 +8,11 @@ const icon = document.querySelector(".icon");
 const cloudOutput = document.querySelector(".cloud");
 const windOutput = document.querySelector(".wind");
 const humadityOutput = document.querySelector(".humidity");
-const form = document.querySelector(".locationInput");
+const form = document.getElementById("locationInput");
 const search = document.querySelector(".search");
 const btn = document.querySelector(".submit");
 const cities = document.querySelector(".city");
-
-let cityInput = "London";
+let cityInput = "Syria";
 Array.from(cities).forEach((city) => {
   city.addEventListener("click", (e) => {
     let cityInput = e.target.innerHTML;
@@ -21,7 +20,6 @@ Array.from(cities).forEach((city) => {
     app.style.opacity = "0";
   });
 });
-
 
 form.addEventListener("submit", (e) => {
   if (search.value.length == 0) {
@@ -50,10 +48,10 @@ function dayOfTheWeek(day, month, year) {
 
 function fetchWeatherData() {
   fetch(
-    `http://api.weatherapi.com/v1/current.json?key=76493338a30e4067933165443240907=${cityInput}`
+    `http://api.weatherapi.com/v1/current.json?key=3726849039bd44989a7171532240907&q=${cityInput}`
   )
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       console.log(data);
       temp.innerHTML = data.current.temp_c + "&#176;";
       conditionOutput.innerHTML = data.current.condition.text;
@@ -66,26 +64,29 @@ function fetchWeatherData() {
       timeOutput.innerHTML = time;
       nameOutput.innerHTML = data.location.name;
       const iconId = data.current.condition.icon.substr(
-        "https://cdn.weatherapi.com/weather/64x64/".length
+        "//cdn.weatherapi.com/weather/64x64/".length
       );
-      icon.src = "../icons" + iconId;
+      icon.src = `icons/` + iconId;
       cloudOutput.innerHTML = data.current.cloud + "%";
       humadityOutput.innerHTML = data.current.humidity + "%";
       windOutput.innerHTML = data.current.wind_kph + "%";
+      // icon.innerHTML = data.current.condition.icon.substr("https://cdn.weatherapi.com/weather/64x64/".length) ;
       let timeOfDay = "day";
+
       const code = data.current.condition.code;
       if (!data.current.is_day) {
         timeOfDay = "night";
       }
-      if (code == 1000) {
-        app.style.backgroundImage = `url(../images/${timeOfDay}/clear.avif)`;
+      if (code == 1003) {
+        app.style.backgroundImage = `url(images/${timeOfDay}/cloudy.avif)`;
         btn.style.background = "#e5ba92";
+
         if ((timeOfDay = "night")) {
           btn.style.background = "#181e27";
         }
       } else if (
+        code == 1000 ||
         code == 1006 ||
-        code == 1003 ||
         code == 1009 ||
         code == 1030 ||
         code == 1069 ||
@@ -96,8 +97,9 @@ function fetchWeatherData() {
         code == 1279 ||
         code == 1282
       ) {
-        app.style.backgroundImage = `url(../images/${timeOfDay}/clear.avif)`;
+        app.style.backgroundImage = `url(images/${timeOfDay}/clear.avif)`;
         btn.style.background = "#fa6d1b";
+
         if ((timeOfDay = "night")) {
           btn.style.background = "#181e27";
         }
@@ -121,14 +123,16 @@ function fetchWeatherData() {
         code == 1249 ||
         code == 1252
       ) {
-        app.style.backgroundImage = `url(../images/${timeOfDay}/rainy.avif)`;
+        app.style.backgroundImage = `url(images/${timeOfDay}/rainy.avif)`;
         btn.style.background = "#647d75";
+
         if ((timeOfDay = "night")) {
           btn.style.background = "#325c80";
         }
       } else {
-        app.style.backgroundImage = `url(../images/${timeOfDay}/snowy.avif)`;
+        app.style.backgroundImage = `url(images/${timeOfDay}/snowy.avif)`;
         btn.style.background = "#4d72aa";
+
         if ((timeOfDay = "night")) {
           btn.style.background = "#1b1b1b";
         }
